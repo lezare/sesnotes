@@ -1,0 +1,14 @@
+Create: rbd create pool_name/image_name –size 102400
+
+Delete: rbd rm pool_name/image_name
+
+*NOTE: If erasure coded pool, this must have a cache tier configured else it can not be specified when creating an rbd image.
+**NOTE: Use the "–image-format 2" option when creating the image to enable snapshot support etc.
+
+Map via rbd Kernel module: rbd map pool_name/image_name
+
+Unmap: rbd unmap /dev/rbd_device
+
+Show current rbd images: rbd ls pool_name
+
+Show current mapped images: rbd showmapped

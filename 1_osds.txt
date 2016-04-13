@@ -1,0 +1,25 @@
+Create:
+
+1. Verify disk to use: ceph-deploy disk list host:device
+2. Clear all disk info: ceph-deploy disk zap host:disk
+3. Prep and activate: ceph deploy osd create  host:device (incorporatesd both "prepare" and "activate")
+or
+a) ceph-deploy osd prepare host:device (may need to use "--overwrite-conf" option)
+b) ceph-deploy osd activate host:device
+
+Remove:
+
+1. Verify correct OSD with "ceph osd tree"
+2. Mark OSD out: ceph osd out xx (where xx is the OSD number eg. 5)
+3. Watch with "ceph -w" that migration completes
+4. Stop the OSD: systemctl stop ceph-osd@xx.service
+5. Remove OSD from crush map: ceph osd crush remove osd.xx
+6. Remove authentication: ceph auth del osd.xx
+7. Remove the OSD: ceph osd rm xx
+8. Remove partitions.
+
+Possibly first do: ceph osd set noout (disable auto rebalancing)
+
+Stuck OSD: 
+ceph osd down xx
+ceph osd rm xx

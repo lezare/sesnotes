@@ -1,0 +1,13 @@
+ceph osd getcrushmap -o file_name.map
+crushtool -d file_name.map -o file_name.txt
+vim file_name.txt
+crushtool -c file_name.txt -o file_name.map
+ceph osd setcrushmap -i file_name.map
+
+Gerneral layout:
+
+tunables
+devices - all osds
+bucket types – osd,host,chassis,rack,row etc.
+Bucket instances – host + host osd's
+rules – how to select buckets
