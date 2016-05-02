@@ -21,6 +21,7 @@ Remove:
 8b. sgdisk --clear --mbrtogpt /dev/dev_name
 
 Possibly first do: ceph osd set noout (disable auto rebalancing)
+To re-enable: ceph osd unset noout
 
 Stuck OSD: 
 ceph osd down xx
