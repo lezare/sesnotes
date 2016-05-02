@@ -17,8 +17,8 @@ Remove:
 6. Remove authentication: ceph auth del osd.xx
 7. Remove the OSD: ceph osd rm xx
 8. Remove partitions:
-8a. sgdisk --zap-all --disk_dev
-8b. sgdisk --clear --mbrtogpt --disk_dev
+8a. sgdisk --zap-all /dev/dev_name
+8b. sgdisk --clear --mbrtogpt /dev/dev_name
 
 Possibly first do: ceph osd set noout (disable auto rebalancing)
 
