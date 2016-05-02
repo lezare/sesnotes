@@ -16,7 +16,9 @@ Remove:
 5. Remove OSD from crush map: ceph osd crush remove osd.xx
 6. Remove authentication: ceph auth del osd.xx
 7. Remove the OSD: ceph osd rm xx
-8. Remove partitions.
+8. Remove partitions:
+8a. sgdisk --zap-all --disk_dev
+8b. sgdisk --clear --mbrtogpt --disk_dev
 
 Possibly first do: ceph osd set noout (disable auto rebalancing)
 
