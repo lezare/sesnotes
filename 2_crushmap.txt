@@ -16,7 +16,8 @@ Gerneral layout:
 
 Basic crushmap config example adding a disktype to split SSDs and "standard" SATA drives where SSDs are planned to be used as a cache tier front end to an erasure coded backing pool:
 
-(NOTE: There is no need to specify the "id -xx" entries for each config entry type as this will be calculated and added automatically when generating the crush map).
+(#NOTE: There is no need to specify the "id -xx" entries for each config entry type as this will be calculated and added automatically when generating the crush map)
+(##NOTE: By default an "rbd" pool is created with SES, before adjusting the crushmap for your environment, remove this pool as it is likely that after the changes PGs will be stuck / unclean indefinitely. Re-create any needed pools after configuring the crushmap)
 
 ###### begin crush map ######
 tunable choose_local_tries 0
