@@ -14,7 +14,7 @@ Gerneral layout:
 4. Bucket instances – host + host osd's
 5. rules – how to select buckets
 
-Basic crushmap config example adding a disktype to split SSDs and "standard" SATA drives where SSDs are planned to be used for erasure code caching front end:
+Basic crushmap config example adding a disktype to split SSDs and "standard" SATA drives where SSDs are planned to be used as a cache tier front end to an erasure coded backing pool:
 
 (NOTE: There is no need to specify the "id -xx" entries for each config entry type as this will be calculated and added automatically when generating the crush map).
 
