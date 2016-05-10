@@ -6,8 +6,212 @@ ceph osd setcrushmap -i file_name.map
 
 Gerneral layout:
 
-tunables
-devices - all osds
-bucket types – osd,host,chassis,rack,row etc.
-Bucket instances – host + host osd's
-rules – how to select buckets
+1. tunables
+2. devices - all osds
+3. bucket types – osd,host,chassis,rack,row etc.
+- Add types as needed for the desired configuration. May not be needed, but add the types in order of their configuration appearance.
+
+4. Bucket instances – host + host osd's
+5. rules – how to select buckets
+
+Basic crushmap config example adding a disktype to split SSDs and "standard" SATA drives where SSDs are planned to be used for erasure code caching front end:
+
+(NOTE: There is no need to specify the "id -xx" entries for each config entry type as this will be calculated and added automatically when generating the crush map).
+
+###### begin crush map ######
+tunable choose_local_tries 0
+tunable choose_local_fallback_tries 0
+tunable choose_total_tries 50
+tunable chooseleaf_descend_once 1
+tunable chooseleaf_vary_r 1
+tunable straw_calc_version 1
+
+# devices
+device 0 osd.0
+device 1 osd.1
+device 2 osd.2
+device 3 osd.3
+device 4 osd.4
+device 5 osd.5
+device 6 osd.6
+device 7 osd.7
+device 8 osd.8
+device 9 osd.9
+device 10 osd.10
+device 11 osd.11
+
+# types
+type 0 osd
+type 1 disktype
+type 2 host
+type 3 chassis
+type 4 rack
+type 5 row
+type 6 pdu
+type 7 pod
+type 8 room
+type 9 datacenter
+type 10 region
+type 11 root
+
+# buckets
+disktype el-sesvm2-ssd {
+	# weight 2.000
+	alg straw
+	hash 0 # rjenkins1
+	item osd.0 weight 1.000
+    item osd.1 weight 1.000
+}
+disktype el-sesvm3-ssd {
+    # weight 2.000
+    alg straw
+    hash 0 # rjenkins1
+	item osd.3 weight 1.000
+    item osd.4 weight 1.000
+}
+disktype el-sesvm2-spinners {
+    # weight 2.000
+    alg straw
+    hash 0 # rjenkins1
+    item osd.2 weight 1.000
+    item osd.9 weight 1.000
+}
+disktype el-sesvm3-spinners {
+    # weight 2.000
+    alg straw
+    hash 0 # rjenkins1
+    item osd.5 weight 1.000
+    item osd.10 weight 1.000
+}
+disktype el-sesvm4-spinners {
+    # weight 4.000
+    alg straw
+    hash 0 # rjenkins1
+    item osd.6 weight 1.000
+    item osd.7 weight 1.000
+    item osd.8 weight 1.000
+    item osd.11 weight 1.000
+}
+
+host el-sesvm2 {
+	id -2		# do not change unnecessarily
+	# weight 4.000
+	alg straw
+	hash 0	# rjenkins1
+	item el-sesvm2-ssd weight 2
+	item el-sesvm2-spinners weight 2
+}
+host el-sesvm3 {
+	id -3		# do not change unnecessarily
+	# weight 4.000
+	alg straw
+	hash 0	# rjenkins1
+	item el-sesvm3-ssd weight 2.000
+	item el-sesvm3-spinners weight 2.000
+}
+host el-sesvm4 {
+	id -4		# do not change unnecessarily
+	# weight 4.000
+	alg straw
+	hash 0	# rjenkins1
+	item el-sesvm4-spinners weight 4.000
+}
+root default {
+	id -1		# do not change unnecessarily
+	# weight 12.000
+	alg straw
+	hash 0	# rjenkins1
+	item el-sesvm2 weight 4.000
+	item el-sesvm3 weight 4.000
+	item el-sesvm4 weight 4.000
+}
+root ssd {
+    # weight 4.000
+    alg straw
+    hash 0  # rjenkins1
+	item el-sesvm2-ssd weight 2
+	item el-sesvm3-ssd weight 2
+}
+root spinners {
+    # weight 8.000
+    alg straw
+    hash 0  # rjenkins1
+	item el-sesvm2-spinners weight 2
+	item el-sesvm3-spinners weight 2
+	item el-sesvm4-spinners weight 4
+}
+# rules
+rule replicated_ruleset {
+	ruleset 0
+	type replicated
+	min_size 1
+	max_size 10
+	step take spinners
+	step chooseleaf firstn 0 type host
+	step emit
+}
+rule ssd {
+    ruleset 1
+    type erasure
+    min_size 1
+    max_size 10
+    step take ssd
+    step chooseleaf firstn 0 type host
+    step emit
+}
+rule spinners {
+    ruleset 2
+    type replicated
+    min_size 1
+    max_size 10
+    step take spinners
+    step chooseleaf firstn 0 type host
+    step emit
+}
+###### end crush map ######
+
+The above crushmap file will result in the following OSD tree layout:
+
+ID  WEIGHT   TYPE NAME                           UP/DOWN REWEIGHT PRIMARY-AFFINITY 
+-11  8.00000 root spinners                                                         
+ -7  2.00000     disktype el-sesvm2-spinners                                       
+  2  1.00000         osd.2                            up  1.00000          1.00000 
+  9  1.00000         osd.9                            up  1.00000          1.00000 
+ -8  2.00000     disktype el-sesvm3-spinners                                       
+  5  1.00000         osd.5                            up  1.00000          1.00000 
+ 10  1.00000         osd.10                           up  1.00000          1.00000 
+ -9  4.00000     disktype el-sesvm4-spinners                                       
+  6  1.00000         osd.6                            up  1.00000          1.00000 
+  7  1.00000         osd.7                            up  1.00000          1.00000 
+  8  1.00000         osd.8                            up  1.00000          1.00000 
+ 11  1.00000         osd.11                           up  1.00000          1.00000 
+-10  4.00000 root ssd                                                              
+ -5  2.00000     disktype el-sesvm2-ssd                                            
+  0  1.00000         osd.0                            up  1.00000          1.00000 
+  1  1.00000         osd.1                            up  1.00000          1.00000 
+ -6  2.00000     disktype el-sesvm3-ssd                                            
+  3  1.00000         osd.3                            up  1.00000          1.00000 
+  4  1.00000         osd.4                            up  1.00000          1.00000 
+ -1 12.00000 root default                                                          
+ -2  4.00000     host el-sesvm2                                                    
+ -5  2.00000         disktype el-sesvm2-ssd                                        
+  0  1.00000             osd.0                        up  1.00000          1.00000 
+  1  1.00000             osd.1                        up  1.00000          1.00000 
+ -7  2.00000         disktype el-sesvm2-spinners                                   
+  2  1.00000             osd.2                        up  1.00000          1.00000 
+  9  1.00000             osd.9                        up  1.00000          1.00000 
+ -3  4.00000     host el-sesvm3                                                    
+ -6  2.00000         disktype el-sesvm3-ssd                                        
+  3  1.00000             osd.3                        up  1.00000          1.00000 
+  4  1.00000             osd.4                        up  1.00000          1.00000 
+ -8  2.00000         disktype el-sesvm3-spinners                                   
+  5  1.00000             osd.5                        up  1.00000          1.00000 
+ 10  1.00000             osd.10                       up  1.00000          1.00000 
+ -4  4.00000     host el-sesvm4                                                    
+ -9  4.00000         disktype el-sesvm4-spinners                                   
+  6  1.00000             osd.6                        up  1.00000          1.00000 
+  7  1.00000             osd.7                        up  1.00000          1.00000 
+  8  1.00000             osd.8                        up  1.00000          1.00000 
+ 11  1.00000             osd.11                       up  1.00000          1.00000
+
+ 
