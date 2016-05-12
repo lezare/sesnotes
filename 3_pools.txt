@@ -1,10 +1,17 @@
-Create Erasure Coded Pool:
+1. Pool relevant commands to note:
 
-NOTE: EC Pools can NOT be used as cache tiers!
+- ceph osd pool get pool_name setting_name
+eg. ceph osd pool get cachessd hit_set_fpp
+- rados -p cache_pool ls (make sure pool is flushed)
+- rados -p cache_pool cache-flush-evict-all (flush all objects manually)
+
+2. Create Erasure Coded Pool:
+
+* NOTE: EC Pools can NOT be used as cache tiers!
 
 Display defaults: ceph osd erasure-code-profile get default
 
-NOTE: Profiles are stored in "/usr/lib64/ceph/erasure-code/"
+* NOTE: Profiles are stored in "/usr/lib64/ceph/erasure-code/"
 
 Create custom profile: ceph osd erasure-code-profile set new_profile_name k=3 m=2 
 Create ecpool: ceph osd pool create pool_name pg pgn erasure ec_profile_name rule_name
@@ -14,11 +21,11 @@ Example: new profile name=eccustom / pool_name=spinners / rule_name=spinners / P
 ceph osd erasure-code-profile set eccustom k=3 m=2 
 ceph osd pool create spinners 100 100 erasure eccustom spinners
 
-Create Replicated (standard) Pool:
+3. Create Replicated (standard) Pool:
 
 ceph osd pool create ssd 100 100 replicated ssd
 
-Create Cache Tier:
+4. Create Cache Tier:
 
 * NOTE: My LAB: spinners = storage_pool / cache_pool = ssd
 
@@ -26,7 +33,7 @@ ceph osd tier add storage_pool cahce_pool
 ceph osd tier cache-mode cache_pool writeback
 ceph osd tier set-overlay storage_pool cache_pool
 
-Configure cache tier settings, these are NOT set by default after configuring a cache tier:
+5. Configure cache tier settings, these are NOT set by default after configuring a cache tier:
 
 ceph osd pool set ssd hit_set_type bloom
 ceph osd pool set ssd hit_set_count 1 (Default will be 0)
@@ -40,18 +47,20 @@ ceph osd pool set hot-storage cache_target_full_ratio 0.8 (Evict or flush clean 
 
 # NOTE: The last 3 options above with SES 3 onwards will be specified with "_micro" added eg. "cache_target_dirty_ratio_micro"
 
-Delete:
+6. Delete:
 
 ceph osd pool delete pool_name pool_name_again –yes-i-really-really-mean-it
-WRITEBACK CACHE:
+
+6a. WRITEBACK CACHE:
 
 ceph osd tier cache-mode {cachepool} forward (change to forward)
+
 rados -p {cachepool} ls (make sure pool is flushed)
 rados -p {cachepool} cache-flush-evict-all (flush all objects manually)
 ceph osd tier remove-overlay {storagetier} (remove overly from cold_storage)
 ceph osd tier remove {storagepool} {cachepool} (remove cache tier pool from the backing storagepool)
 
-Increase or set Placement Groups:
+7. Increase or set Placement Groups:
 
 ceph osd pool set pool_name pg_num ins_value (Placement Group_number)
 ceph osd pool set pool_name pgp_num ins_value (Placement Group for Placement_number)
