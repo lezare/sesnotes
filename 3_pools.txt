@@ -26,17 +26,19 @@ ceph osd tier add storage_pool cahce_pool
 ceph osd tier cache-mode cache_pool writeback
 ceph osd tier set-overlay storage_pool cache_pool
 
-Configure cache tier settings:
+Configure cache tier settings, these are NOT set by default after configuring a cache tier:
 
 ceph osd pool set ssd hit_set_type bloom
-ceph osd pool set ssd hit_set_count 1
-ceph osd pool set ssd hit_set_period 3600
-ceph osd pool set ssd target_max_bytes 1000000000000
-ceph osd pool set {cachepool} min_read_recency_for_promote 1
-ceph osd pool set {cachepool} min_write_recency_for_promote 1 (only available from "Infernalis" version)
-ceph osd pool set hot-storage cache_target_dirty_ratio 0.4 (Flush when dirty objects reach 40% of cache pool capacity)
-ceph osd pool set hot-storage cache_target_dirty_high_ratio 0.6 (Aggresively start flushing at 60% - only available from "Infernalis" version)
-ceph osd pool set hot-storage cache_target_full_ratio 0.8 (Evict or flush clean / unmodified object at 80% of cache pool capacity)
+ceph osd pool set ssd hit_set_count 1 (Default will be 0)
+ceph osd pool set ssd hit_set_period 3600 (Default will be 0)
+ceph osd pool set ssd target_max_bytes 1000000000000 (Default will be 0)
+ceph osd pool set {cachepool} min_read_recency_for_promote 1 (Default will be 0)
+ceph osd pool set {cachepool} min_write_recency_for_promote 1 (only available from "Infernalis" version) (Default will be 0)
+ceph osd pool set hot-storage cache_target_dirty_ratio 0.4 (Flush when dirty objects reach 40% of cache pool capacity) (Default will be 400000)
+ceph osd pool set hot-storage cache_target_dirty_high_ratio 0.6 (Aggresively start flushing at 60% - only available from "Infernalis" version) (Default will be 600000)
+ceph osd pool set hot-storage cache_target_full_ratio 0.8 (Evict or flush clean / unmodified object at 80% of cache pool capacity) (Default will be 800000)
+
+# NOTE: The last 3 options above with SES 3 onwards will be specified with "_micro" added eg. "cache_target_dirty_ratio_micro"
 
 Delete:
 
