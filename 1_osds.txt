@@ -1,3 +1,8 @@
+General:
+
+OSD location directory: cd /var/lib/ceph/osd/ceph-[id]
+In the above directory, the "current" directory your current (non-snapshot) filestore. It contains subdirectories that correspond to PGs that the OSD hosts.
+
 Create:
 
 1. Verify disk to use: ceph-deploy disk list host:device
