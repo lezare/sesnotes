@@ -18,6 +18,7 @@ Basic crushmap config example adding a disktype to split SSDs and "standard" SAT
 
 (#NOTE: There is no need to specify the "id -xx" entries for each config entry type as this will be calculated and added automatically when generating the crush map)
 (##NOTE: By default an "rbd" pool is created with SES, before adjusting the crushmap for your environment, remove this pool as it is likely that after the changes PGs will be stuck / unclean indefinitely. Re-create any needed pools after configuring the crushmap)
+(###NOTE: Modifying the crushmap extensively, it will likely be needed to set in /etc/ceph/ceph.conf: "osd crush update on start = false"
 
 ###### begin crush map ######
 tunable choose_local_tries 0
