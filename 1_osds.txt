@@ -12,6 +12,14 @@ or
 a) ceph-deploy osd prepare host:device (may need to use "--overwrite-conf" option)
 b) ceph-deploy osd activate host:device
 
+Separate journal device:
+
+# ceph-deploy osd prepare host:<data_dev>:</dev/journal_device>
+
+e.g.
+
+# ceph-deploy osd prepare nodeX:sdc:/dev/nvme
+
 Remove:
 
 1. Verify correct OSD with "ceph osd tree"
