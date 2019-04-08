@@ -12,3 +12,9 @@ Unmap: rbd unmap /dev/rbd_device
 Show current rbd images: rbd ls pool_name
 
 Show current mapped images: rbd showmapped
+
+Show current rbd info: rbd -p pool_name info test
+
+Disable feature(s): rbd -p pool_name feature disable image_name exclusive-lock
+
+Enable features: rbd -p pool_name feature enable image_name exclusive-lock journaling
