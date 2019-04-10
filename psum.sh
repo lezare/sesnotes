@@ -11,13 +11,17 @@ declare -rx script=${0##*/}
 declare -rx tput="/usr/bin/tput"
 declare -rx grep="/usr/bin/grep"
 
-# Verify Commands
+# Verify Commands and input file parameter
 if [ ! -x "$tput" ] ; then
-	print "$script:$LINENO: The $tput command is not available - aborting\n" >&2
+	printf "$script:$LINENO: The $tput command is not available - aborting\n" >&2
 	exit 192
 fi
 if [ ! -x "$grep" ] ; then 
-	print "$grep:$LINENO: The $grep command is not available - aborting\n" >&2
+	printf "$grep:$LINENO: The $grep command is not available - aborting\n" >&2
+	exit 192
+fi
+if [[ $# -ne 1 ]] ; then
+	printf "Required file parameter not specified, please specify an input file\n" >&2
 	exit 192
 fi
 
@@ -26,7 +30,7 @@ RED=`$tput setaf 1`
 GREEN=`$tput setaf 2`
 RESET=`$tput sgr0`
 
-# Set Output File
+# Set Output File and make sure we start clean
 LOG=pool_summary.log
 
 if [ -f $LOG ] ; then

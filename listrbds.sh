@@ -37,9 +37,9 @@ if [ -f $LOG ]
 fi
 
 # Read all Pools and list their images
-for x in `rados lspools`;
-        do echo 'POOL NAME:' $x >> $LOG;
-	  $timeout 60 $rbd ls -l $x >> $LOG;
+for pool in `rados lspools`;
+        do echo 'POOL NAME:' $pool >> $LOG;
+	  $timeout 60 $rbd ls -l $pool >> $LOG;
 	  echo '======' >> $LOG;
         done
 
