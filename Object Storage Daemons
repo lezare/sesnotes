@@ -14,11 +14,11 @@ b) ceph-deploy osd activate host:device
 
 Separate journal device:
 
-# ceph-deploy osd prepare host:<data_dev>:</dev/journal_device>
+ # ceph-deploy osd prepare host:<data_dev>:</dev/journal_device>
 
 e.g.
 
-# ceph-deploy osd prepare nodeX:sdc:/dev/nvme
+ # ceph-deploy osd prepare nodeX:sdc:/dev/nvme
 
 Remove:
 
@@ -38,5 +38,11 @@ Possibly first do: ceph osd set noout (disable auto rebalancing)
 To re-enable: ceph osd unset noout
 
 Stuck OSD: 
-ceph osd down xx
-ceph osd rm xx
+
+ # ceph osd down xx
+ # ceph osd rm xx
+
+Get and set Max Backfills:
+
+ # ceph daemon osd.0 config get osd_max_backfills
+ # ceph tell osd.* injectargs '--osd_max_backfills 4'
