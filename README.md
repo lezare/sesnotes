@@ -1,2 +1,2 @@
 # sesnotes
-General SES Notes
+Usefull SES information and scripts
