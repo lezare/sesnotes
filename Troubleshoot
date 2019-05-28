@@ -22,4 +22,4 @@ grep 'slow request' ceph.log | awk '{print $3}' | sort | uniq -c | sort -n
 Re-set the caps using the mon keyring e.g.;
 
 cd /var/lib/ceph/mon/ceph-`$hostname -s`\
-ceph -n mon. --keyring keyring auth caps client.admin mds 'allow *' osd 'allow *' mon 'allow *'
+ceph -n mon. --keyring keyring auth caps client.admin mds 'allow *' osd 'allow *' mon 'allow *' mgr 'allow *'
