@@ -1,18 +1,25 @@
-Full osd's:
+## Full osd's:
 - ceph osd tree
 - ceph health detail
 - ceph pg dump
 - ceph osd dump
 
-Copy of the crushmap.
+## Copy of the crushmap.
 
 1. Consider changing full ratio: ceph pg set_full_ratio 0.98
 2. If OSD's can not start at all, manually delete placement group directories in: /var/lib/ceph/osd/ceph-x/current/ (where "ceph-x" is the osd number that is shown as down)
 
 NOTE: Be careful when deleting directories, only do so from one OSD and make sure a copy always exists on at least one other OSD!!
 
-Slow Requests:
+## Slow Requests:
 
 - Verify requests are not slow on only specific OSDs / hosts, for example by running the below and comparing the output against the osd tree:
 
 grep 'slow request' ceph.log | awk '{print $3}' | sort | uniq -c | sort -n
+
+## Admin keyring CAPS messed up:
+
+Re-set the caps using the mon keyring e.g.;
+
+cd /var/lib/ceph/mon/ceph-`$hostname -s`\
+ceph -n mon. --keyring keyring auth caps client.admin mds 'allow *' osd 'allow *' mon 'allow *'
