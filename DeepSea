@@ -43,7 +43,7 @@ List job history:
 #### Targeting Minions ####
 
 Using Pillar data:
- # salt -I ‘roles:mon’ test.ping
+ :~ # salt -I ‘roles:mon’ test.ping
 
 Regular Expression:
- # salt -E ‘ses-nue-[1,2,3].*’
+ :~ # salt -E ‘ses-nue-[1,2,3].*’
