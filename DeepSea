@@ -1,0 +1,49 @@
+#### Basic SALT commands ####
+
+Get all documentation: 
+ :~ # salt $salt_minion sys.doc
+
+Get specific documentation: 
+ :~ # salt $salt_minion sys.doc $item
+Example: 
+ :~ # salt ses1 sys.doc grains.setval
+
+List functions:
+ :~ #  salt ‘*’ sys.list_functions
+
+List all grains:
+ :~ #  salt ‘*’ grains.items
+
+Check specific grain:
+ :~ #  salt ‘*’ grains.item $item_name
+
+Check service status: 
+ :~ # salt ‘*’ service.status $service_name
+
+Set grain value(s): 
+ :~ # salt ‘*’ grain.setval(s) $key_name $value
+
+Dry run check/verify state: 
+ :~ # salt $target state.sls $state_name test=True
+
+Apply specific function from a state: 
+ :~ # salt-call state.single fun=$function ???
+
+Apply the highstate limited to 10% of total minions:
+ :~ # salt \* --batch-size 10% state.highstate 
+	OR to only 20 at a time: 
+ :~ # salt \* -b 20 state.highstate
+
+List active jobs:
+ :~ # salt-run jobs.active
+
+List job history:
+ :~ # salt-run jobs.list_jobs
+
+#### Targeting Minions ####
+
+Using Pillar data:
+ # salt -I ‘roles:mon’ test.ping
+
+Regular Expression:
+ # salt -E ‘ses-nue-[1,2,3].*’
