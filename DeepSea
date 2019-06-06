@@ -37,6 +37,9 @@ Apply the highstate limited to 10% of total minions:
 List active jobs:
  :~ # salt-run jobs.active
 
+Kill a stuck job:
+ :~ # salt 'ins_minion*' saltutil.kill_job <job_id>
+
 List job history:
  :~ # salt-run jobs.list_jobs
 
