@@ -1,3 +1,9 @@
+## Gigagyte and binary
+1 Gigabyte:
+A gigabyte (decimal) contains 1000^3 bytes. This is the common usage compared to a gigabyte (binary) or a gibibyte that contains 1024^3 bytes.
+1 Gibibyte:
+A gibibyte contains 1024^3 bytes, this is the same as a binary gigabyte. It is similar but not equal to the common gigabyte (decimal) that contains 1000^3 bytes
+
 ## Full osd's:
 - ceph osd tree
 - ceph health detail
