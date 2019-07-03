@@ -21,7 +21,7 @@ NOTE: Be careful when deleting directories, only do so from one OSD and make sur
 
 - Verify requests are not slow on only specific OSDs / hosts, for example by running the below and comparing the output against the osd tree:
 
-grep 'slow request' ceph.log | awk '{print $3}' | sort | uniq -c | sort -n
+ :~> grep 'slow request' ceph.log | awk '{print $3}' | sort | uniq -c | sort -n
 
 ## Admin keyring CAPS messed up:
 
@@ -29,3 +29,15 @@ Re-set the caps using the mon keyring e.g.;
 
 cd /var/lib/ceph/mon/ceph-`$hostname -s`\
 ceph -n mon. --keyring keyring auth caps client.admin mds 'allow *' osd 'allow *' mon 'allow *' mgr 'allow *'
+
+## Inconsistent PG / Scrub Error
+
+ :~> ceph pg deep-scrub <pg_id>
+ :~> ceph -w | grep <pg_id>
+ :~> rados list-inconsistent-obj <pg_id> --format=json-pretty
+
+Depending on the results, we can then decide if forcing a repair with the below command will be okay:
+
+ :~> ceph pg repair <pg_id>
+
+
