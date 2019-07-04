@@ -50,3 +50,18 @@ Using Pillar data:
 
 Regular Expression:
  :~ # salt -E ‘ses-nue-[1,2,3].*’
+
+#### DeepSea Specific ####
+
+Verify expected processes:
+ :~ # salt \* cephprocesses.wait
+ If False is returned for some minions, additionally verify which processes:
+ :~ # salt 'false_minion*' cephprocesses.check results=True
+
+Stage 2 osd.advise error "TypeError: string indices must be integers, not str"
+ Make sure grains are up to date:
+ :~ # salt -I 'roles:storage' osd.retain | tee retain.out
+ Verify status:
+ :~ # salt -I 'roles:storage' pillar.get ceph | tee pillar.out
+ :~ # salt -I 'roles:storage' grains.get ceph | tee grains.out
+ :~ # salt -I 'roles:storage' osd.report human=False | tee osd-report.out
