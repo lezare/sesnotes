@@ -43,10 +43,19 @@ Kill a stuck job:
 List job history:
  :~ # salt-run jobs.list_jobs
 
+Refresh the pillar:
+ :~ # salt \* saltutil.refresh_pillar
+
+Show pillar information:
+ :~ # salt -I 'cluster:ceph' pillar.items
+
 #### Targeting Minions ####
 
 Using Pillar data:
+ e.g. Only MONs:
  :~ # salt -I ‘roles:mon’ test.ping
+ e.g. all cluster nodes in pillar:
+ :~ # salt -I 'cluster:ceph' test.ping
 
 Regular Expression:
  :~ # salt -E ‘ses-nue-[1,2,3].*’
