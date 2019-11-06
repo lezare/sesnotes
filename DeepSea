@@ -75,7 +75,7 @@ Stage 2 osd.advise error "TypeError: string indices must be integers, not str"
  :~ # salt -I 'roles:storage' grains.get ceph | tee grains.out
  :~ # salt -I 'roles:storage' osd.report human=False | tee osd-report.out
 
-Get OSD creation commands (SES 5x ONLY):
-
- :~ # salt 'minion*' osd.prepare /dev/sd<X>
- :~ # salt 'minion*' osd.activate /dev/sd<X>
+Verify the "iscsi.wait" module function:
+ :~ # salt 'ins_igw_minion*' service.status rbd-target-api.service
+ :~ # salt 'ins_igw_minion*' http.query http(s)://<usr>:<pass>@ins_igw_dns:5000/api/_ping verify=False timeout=5
+ 
