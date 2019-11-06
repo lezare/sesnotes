@@ -78,4 +78,9 @@ Stage 2 osd.advise error "TypeError: string indices must be integers, not str"
 Verify the "iscsi.wait" module function:
  :~ # salt 'ins_igw_minion*' service.status rbd-target-api.service
  :~ # salt 'ins_igw_minion*' http.query http(s)://<usr>:<pass>@ins_igw_dns:5000/api/_ping verify=False timeout=5
- 
+
+Get ceph-disk commands (only SES5x):
+
+ :~ # salt 'ins_minion*' osd.prepare /dev/sd<x>
+ :~ # salt 'ins_minion*' osd.activate /dev/sd<x>
+
