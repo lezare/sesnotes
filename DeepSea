@@ -74,3 +74,8 @@ Stage 2 osd.advise error "TypeError: string indices must be integers, not str"
  :~ # salt -I 'roles:storage' pillar.get ceph | tee pillar.out
  :~ # salt -I 'roles:storage' grains.get ceph | tee grains.out
  :~ # salt -I 'roles:storage' osd.report human=False | tee osd-report.out
+
+Get OSD creation commands (SES 5x ONLY):
+
+ :~ # salt 'minion*' osd.prepare /dev/sd<X>
+ :~ # salt 'minion*' osd.activate /dev/sd<X>
