@@ -1,0 +1,11 @@
+Alertmanager:
+
+http://<deepsea_node>:9093/
+
+Prometheus Web UI:
+
+http://<deepsea_node>:9090/
+
+Sample Query:
+
+-ceph_pool_used_bytes / deriv(ceph_pool_available_bytes[2d])
