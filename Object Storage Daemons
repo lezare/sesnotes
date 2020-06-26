@@ -50,7 +50,36 @@ Stuck OSD:
  # ceph osd down xx
  # ceph osd rm xx
 
+Get and set General:
+
+ # ceph --admin-daemon /var/run/ceph/ceph-osd.XX.asok config show | grep <option>
+ # ceph daemon mon.`hostname` config set debug_mon xx
+
 Get and set Max Backfills:
 
  # ceph daemon osd.0 config get osd_max_backfills
  # ceph tell osd.* injectargs '--osd_max_backfills 4'
+
+Troubleshoot slow operations:
+
+1. Get disk io statistics using for example iostat (this requires the sysstat package to be installed) e.g. something like `iostat -x 5 20` when slow ops are observed so we can verify disk utilization.
+2. Get osd perf output periodically (ceph osd perf) every couple of seconds for example every 20 seconds when slow ops are seen.
+3. Across slow ops happening get the following additional output for the affected OSD(s):
+
+	`ceph daemon osd.XX dump_historic_ops`,
+	`ceph daemon osd.XX dump_blocked_ops`,
+	`ceph daemon osd.XX dump_ops_in_flight`
+
+Example script to capture history of perf dumps as just one or a couple of itterations is sub-optimal:
+
+ ------
+ for i in `seq 100`; do
+   date
+   ceph daemon osd.$id perf dump
+   sleep 10
+ done | tee perf_dump.log 
+ ------
+
+Show Bluestore perf counters:
+
+:~ # ceph daemon osd.XX perf dump

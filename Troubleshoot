@@ -40,4 +40,18 @@ Depending on the results, we can then decide if forcing a repair with the below 
 
  :~> ceph pg repair <pg_id>
 
+## 6 Debug logs:
 
+ :~> ceph tell mon.$(hostname) injectargs --debug-ms 1
+
+or in the conf and restart relevant service:
+
+debug ms = 1
+
+## Get MON/MGR Status from the socket:
+
+MON:
+ :~> ceph --admin-daemon /var/run/ceph/ceph-mon.`hostname`.asok quorum_status
+
+MGR:
+ :~> ceph --admin-daemon /var/run/ceph/ceph-mgr.`hostname`.asok status
