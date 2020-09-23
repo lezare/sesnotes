@@ -1,0 +1,18 @@
+A. On the OSD node:
+
+1. Rotate the salt log:
+
+:~ # logrotate -f /etc/logrotate.d/salt
+
+2. Enable salt minion debug logging on the OSD host. To do this, edit "/etc/salt/minion" and unremark and set this line:
+
+log_level_logfile: debug
+
+3. Restart the salt-minion service (systemctl restart salt-minion.service)
+
+B. On the Admin node:
+
+1. Attempt to deploy the OSDs by running specifically against the OSD node:
+
+:~ # salt-run disks.deploy target='*XXX*' | tee disks_deploy.out
+
